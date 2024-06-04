@@ -1,16 +1,45 @@
 package com.mobilecomputing.backend.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.mobilecomputing.backend.model.Recipe;
+import com.mobilecomputing.backend.repository.RecipeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("/api")
 public class RecipeController {
 
-    @GetMapping("/get/recipe")
-    public String getRecipe() {
-        return "Hello World";
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+    @GetMapping("/recipes")
+    public ResponseEntity<List<Recipe>> getAllRecipes(@RequestParam(required = false) String name){
+        try {
+            List<Recipe> recipes;
+            if (name == null) {
+                recipes = recipeRepository.findAll();
+            } else {
+                recipes = recipeRepository.findByNameContaining(name);
+            }
+            return ResponseEntity.ok(recipes);
+        } catch(Exception e){
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/instructions")
+    public ResponseEntity<List<Recipe>> getRecipeByInstructions(String instructions){
+        try {
+            List<Recipe> recipes;
+            recipes = recipeRepository.findByInstructionsContaining(instructions);
+            return ResponseEntity.ok(recipes);
+        } catch(Exception e){
+            return ResponseEntity.status(500).build();
+        }
     }
 
     //TODO: get recipe by id

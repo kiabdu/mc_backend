@@ -1,4 +1,4 @@
-package com.mobilecomputing.backend;
+package com.mobilecomputing.backend.controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.mobilecomputing.backend;
+package com.mobilecomputing.backend.model;
 
 public class Recipe
 {

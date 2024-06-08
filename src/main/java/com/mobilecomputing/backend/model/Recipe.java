@@ -7,23 +7,22 @@ import jakarta.persistence.*;
 public class Recipe
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recipes_seq")
-    @SequenceGenerator(name = "recipes_seq", sequenceName = "RECIPES_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name")
+    @Column(columnDefinition = "VARCHAR(255)")
     private String name;
 
-    @Column(name = "ingredients")
+    @Column(columnDefinition = "TEXT")
     private String ingredients;
 
-    @Column(name = "instructions")
+    @Column(columnDefinition = "TEXT")
     private String instructions;
 
-    @Column(name = "estimated_time")
+    @Column(columnDefinition = "TEXT")
     private String estimated_time;
 
-    @Column(name = "picture")
+    @Column(columnDefinition = "VARCHAR(255)")
     private String previewImage;
 
     //@Column(name = "review")

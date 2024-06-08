@@ -31,6 +31,17 @@ public class RecipeController {
         }
     }
 
+    @GetMapping("/name")
+    public ResponseEntity<List<Recipe>> getRecipeByName(String name){
+        try {
+            List<Recipe> recipes;
+            recipes = recipeRepository.findByNameContaining(name);
+            return ResponseEntity.ok(recipes);
+        } catch(Exception e){
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     @GetMapping("/instructions")
     public ResponseEntity<List<Recipe>> getRecipeByInstructions(String instructions){
         try {
@@ -42,9 +53,14 @@ public class RecipeController {
         }
     }
 
-    //TODO: get recipe by id
-
-    //TODO: get recipe by name
-
-    //TODO: get recipe by ingredients
+    @GetMapping("/ingredients")
+    public ResponseEntity<List<Recipe>> getRecipeByIngredients(String ingredients){
+        try {
+            List<Recipe> recipes;
+            recipes = recipeRepository.findByIngredientsContaining(ingredients);
+            return ResponseEntity.ok(recipes);
+        } catch (Exception e){
+            return ResponseEntity.status(500).build();
+        }
+    }
 }

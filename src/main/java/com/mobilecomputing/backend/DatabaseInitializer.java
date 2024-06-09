@@ -49,7 +49,7 @@ public class DatabaseInitializer implements ApplicationListener<ApplicationReady
                 // csv layout:
                 // [0] title, [1] image URL, [2] measurements, [3] ingredients, [4] total time, [5] instructions
                 Recipe recipe = new Recipe(recipeParts[0], measurementsAndIngredients,
-                        recipeParts[4], recipeParts[5], recipeParts[1]);
+                        recipeParts[5], recipeParts[4], recipeParts[1]);
 
                 recipeRepository.save(recipe);
             }

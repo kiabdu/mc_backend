@@ -40,15 +40,16 @@ public class DatabaseInitializer implements ApplicationListener<ApplicationReady
                 String[] recipeParts = line.split(SEPARATOR);
                 String[] measurements = StringUtils.substringsBetween(recipeParts[2], "'", "'");
                 String[] ingredients = StringUtils.substringsBetween(recipeParts[3], "'", "'");
-                String measurementsAndIngredients = "";
+
+                StringBuilder measurementsAndIngredients = new StringBuilder();
 
                 for (int i = 0; i < measurements.length; i++) {
-                    measurementsAndIngredients += measurements[i] + " " + ingredients[i] + " | ";
+                    measurementsAndIngredients.append(measurements[i]).append(" ").append(ingredients[i]).append(" | ");
                 }
 
                 // csv layout:
                 // [0] title, [1] image URL, [2] measurements, [3] ingredients, [4] total time, [5] instructions
-                Recipe recipe = new Recipe(recipeParts[0], measurementsAndIngredients,
+                Recipe recipe = new Recipe(recipeParts[0], measurementsAndIngredients.toString(),
                         recipeParts[5], recipeParts[4], recipeParts[1]);
 
                 recipeRepository.save(recipe);

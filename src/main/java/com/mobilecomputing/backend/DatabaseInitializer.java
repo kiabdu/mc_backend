@@ -30,7 +30,7 @@ public class DatabaseInitializer implements ApplicationListener<ApplicationReady
         }
     }
 
-    private void initDatabase() {
+    protected void initDatabase() {
         InputStream inputStream = DatabaseInitializer.class.getResourceAsStream("/recipes.csv");
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {

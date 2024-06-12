@@ -3,10 +3,13 @@ package com.mobilecomputing.backend;
 import com.mobilecomputing.backend.model.Recipe;
 import com.mobilecomputing.backend.repository.RecipeRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 
@@ -31,30 +34,34 @@ public class DatabaseInitializer implements ApplicationListener<ApplicationReady
     }
 
     protected void initDatabase() {
-        InputStream inputStream = DatabaseInitializer.class.getResourceAsStream("/recipes.csv");
+        InputStream inputStream = DatabaseInitializer.class.getResourceAsStream("/recipes.json");
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            StringBuilder jsonContent = new StringBuilder();
             String line;
 
             while ((line = br.readLine()) != null) {
-                String[] recipeParts = line.split(SEPARATOR);
-                String[] measurements = StringUtils.substringsBetween(recipeParts[2], "'", "'");
-                String[] ingredients = StringUtils.substringsBetween(recipeParts[3], "'", "'");
+                jsonContent.append(line);
+            }
 
-                StringBuilder measurementsAndIngredients = new StringBuilder();
+            // Parse the JSON content
+            JSONArray jsonArray = new JSONArray(jsonContent.toString());
 
-                for (int i = 0; i < measurements.length; i++) {
-                    measurementsAndIngredients.append(measurements[i]).append(" ").append(ingredients[i]).append(" | ");
-                }
+            // Iterate over each JSON object
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                // csv layout:
-                // [0] title, [1] image URL, [2] measurements, [3] ingredients, [4] total time, [5] instructions
-                Recipe recipe = new Recipe(recipeParts[0], measurementsAndIngredients.toString(),
-                        recipeParts[5], recipeParts[4], recipeParts[1]);
+                String name = jsonObject.getString("name");
+                String ingredients = jsonObject.getString("ingredients");
+                String instructions = jsonObject.getString("instructions");
+                String estimatedTime = jsonObject.getString("estimated_time");
+                String previewImage = jsonObject.getString("previewImage");
 
+                // Create Recipe object and save it
+                Recipe recipe = new Recipe(name, ingredients, instructions, estimatedTime, previewImage);
                 recipeRepository.save(recipe);
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
     }

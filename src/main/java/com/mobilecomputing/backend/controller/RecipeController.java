@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Random;
+
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -60,6 +64,27 @@ public class RecipeController {
             recipes = recipeRepository.findByIngredientsContaining(ingredients);
             return ResponseEntity.ok(recipes);
         } catch (Exception e){
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    //to retrieve 5 random "recipes of the day" for home fragment in android client
+    @GetMapping("/random")
+    public ResponseEntity<List<Recipe>> getRandomRecipes() {
+        try {
+            List<Recipe> recipes = new ArrayList<>();
+            int lowerBound = 1;
+            int upperBound = (int) recipeRepository.count();
+            Random random = new Random();
+
+            for (int i = 0; i < 5; i++) {
+                int randomNumber = random.nextInt(upperBound - lowerBound + 1) + lowerBound;
+                Optional<Recipe> optionalRecipe = recipeRepository.findById(randomNumber);
+                optionalRecipe.ifPresent(recipes::add);
+            }
+
+            return ResponseEntity.ok(recipes);
+        } catch (Exception e) {
             return ResponseEntity.status(500).build();
         }
     }

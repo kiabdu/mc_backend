@@ -26,8 +26,8 @@ class DatabaseInitializerTest {
         databaseInitializer.initDatabase();
 
         // Then
-        //recipes.csv has exactly 550 recipes
-        verify(recipeRepository, times(550)).save(any(Recipe.class));
+        //recipes.csv has exactly 234 recipes
+        verify(recipeRepository, times(234)).save(any(Recipe.class));
     }
 }
 

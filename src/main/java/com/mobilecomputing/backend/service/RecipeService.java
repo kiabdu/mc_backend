@@ -28,17 +28,17 @@ public class RecipeService {
 
     // Fetch recipes by name
     public List<Recipe> getRecipesByName(String name) {
-        return recipeRepository.findByNameContaining(name);
+        return recipeRepository.findByNameContainingIgnoreCase(name);
     }
 
     // Fetch recipes by instructions
     public List<Recipe> getRecipesByInstructions(String instructions) {
-        return recipeRepository.findByInstructionsContaining(instructions);
+        return recipeRepository.findByInstructionsContainingIgnoreCase(instructions);
     }
 
     // Fetch recipes by ingredients
     public List<Recipe> getRecipesByIngredients(String ingredients) {
-        return recipeRepository.findByIngredientsContaining(ingredients);
+        return recipeRepository.findByIngredientsContainingIgnoreCase(ingredients);
     }
 
     // Fetch 5 random recipes, updated once every 24 hours

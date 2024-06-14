@@ -2,6 +2,7 @@ package com.mobilecomputing.backend.controller;
 
 import com.mobilecomputing.backend.model.Recipe;
 import com.mobilecomputing.backend.repository.RecipeRepository;
+import com.mobilecomputing.backend.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class RecipeController {
+
+    @Autowired
+    private RecipeService recipeService;
 
     @Autowired
     private RecipeRepository recipeRepository;
@@ -72,17 +76,7 @@ public class RecipeController {
     @GetMapping("/random")
     public ResponseEntity<List<Recipe>> getRandomRecipes() {
         try {
-            List<Recipe> recipes = new ArrayList<>();
-            int lowerBound = 1;
-            int upperBound = (int) recipeRepository.count();
-            Random random = new Random();
-
-            for (int i = 0; i < 5; i++) {
-                int randomNumber = random.nextInt(upperBound - lowerBound + 1) + lowerBound;
-                Optional<Recipe> optionalRecipe = recipeRepository.findById(randomNumber);
-                optionalRecipe.ifPresent(recipes::add);
-            }
-
+            List<Recipe> recipes = recipeService.getRandomRecipes();
             return ResponseEntity.ok(recipes);
         } catch (Exception e) {
             return ResponseEntity.status(500).build();

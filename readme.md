@@ -39,11 +39,11 @@ Retrieve a list of recipes based on optional query parameters. If no query param
         Retrieve recipes by ingredients:
         GET /recipe?ingredients=Tomato
 
-    Retrieve recipes by instructions:
-    GET /recipe?instructions=Boil
+        Retrieve recipes by instructions:
+        GET /recipe?instructions=Boil
 
-    Retrieve all recipes (no query parameters):
-    GET /recipe
+        Retrieve all recipes (no query parameters):
+        GET /recipe
 
     Response:
         200 OK: A list of recipes matching the search criteria.

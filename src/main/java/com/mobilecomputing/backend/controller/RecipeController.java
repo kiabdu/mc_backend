@@ -1,16 +1,12 @@
 package com.mobilecomputing.backend.controller;
 
 import com.mobilecomputing.backend.model.Recipe;
-import com.mobilecomputing.backend.repository.RecipeRepository;
 import com.mobilecomputing.backend.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
-
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -21,58 +17,30 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @Autowired
-    private RecipeRepository recipeRepository;
+    @GetMapping("/recipe")
+    public ResponseEntity<List<Recipe>> getRecipeByName(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String ingredients,
+            @RequestParam(required = false) String instructions){
+        List<Recipe> recipes;
 
-    @GetMapping("/recipes")
-    public ResponseEntity<List<Recipe>> getAllRecipes(@RequestParam(required = false) String name){
         try {
-            List<Recipe> recipes;
-            if (name == null) {
-                recipes = recipeRepository.findAll();
+            if(name != null){
+                recipes = recipeService.getRecipesByName(name);
+            } else if(ingredients != null){
+                recipes = recipeService.getRecipesByIngredients(ingredients);
+            } else if(instructions != null){
+                recipes = recipeService.getRecipesByInstructions(instructions);
             } else {
-                recipes = recipeRepository.findByNameContaining(name);
+                recipes = recipeService.getAllRecipes();
             }
+
             return ResponseEntity.ok(recipes);
         } catch(Exception e){
             return ResponseEntity.status(500).build();
         }
     }
 
-    @GetMapping("/name")
-    public ResponseEntity<List<Recipe>> getRecipeByName(String name){
-        try {
-            List<Recipe> recipes;
-            recipes = recipeRepository.findByNameContaining(name);
-            return ResponseEntity.ok(recipes);
-        } catch(Exception e){
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    @GetMapping("/instructions")
-    public ResponseEntity<List<Recipe>> getRecipeByInstructions(String instructions){
-        try {
-            List<Recipe> recipes;
-            recipes = recipeRepository.findByInstructionsContaining(instructions);
-            return ResponseEntity.ok(recipes);
-        } catch(Exception e){
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    @GetMapping("/ingredients")
-    public ResponseEntity<List<Recipe>> getRecipeByIngredients(String ingredients){
-        try {
-            List<Recipe> recipes;
-            recipes = recipeRepository.findByIngredientsContaining(ingredients);
-            return ResponseEntity.ok(recipes);
-        } catch (Exception e){
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    //to retrieve 5 random "recipes of the day" for home fragment in android client
     @GetMapping("/random")
     public ResponseEntity<List<Recipe>> getRandomRecipes() {
         try {

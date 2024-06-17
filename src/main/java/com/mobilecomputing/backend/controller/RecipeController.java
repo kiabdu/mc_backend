@@ -17,6 +17,15 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
+    @GetMapping("/random")
+    public ResponseEntity<List<Recipe>> getRandomRecipes() {
+        try {
+            List<Recipe> recipes = recipeService.getRandomRecipes();
+            return ResponseEntity.ok(recipes);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 
     @GetMapping("/recipes")
     public ResponseEntity<List<Recipe>> getIngredientsContainingAll(@RequestParam List<String> arguments){

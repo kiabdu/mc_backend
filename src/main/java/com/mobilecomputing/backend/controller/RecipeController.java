@@ -17,44 +17,25 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @GetMapping("/recipe")
-    public ResponseEntity<List<Recipe>> getRecipeByName(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String ingredients,
-            @RequestParam(required = false) String instructions){
-        List<Recipe> recipes;
 
-        try {
-            if(name != null){
-                recipes = recipeService.getRecipesByName(name);
-            } else if(ingredients != null){
-                recipes = recipeService.getRecipesByIngredients(ingredients);
-            } else if(instructions != null){
-                recipes = recipeService.getRecipesByInstructions(instructions);
-            } else {
-                recipes = recipeService.getAllRecipes();
-            }
-
-            return ResponseEntity.ok(recipes);
-        } catch(Exception e){
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    @GetMapping("/random")
-    public ResponseEntity<List<Recipe>> getRandomRecipes() {
-        try {
-            List<Recipe> recipes = recipeService.getRandomRecipes();
-            return ResponseEntity.ok(recipes);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    @GetMapping("/multiple")
-    public ResponseEntity<List<Recipe>> getIngredientsContainingAll(@RequestParam List<String> ingredient){
+    @GetMapping("/recipes")
+    public ResponseEntity<List<Recipe>> getIngredientsContainingAll(@RequestParam String filter, @RequestParam List<String> arguments){
         try{
-            List<Recipe> recipes = recipeService.findByIngredientsContainingAll(ingredient);
+            List<Recipe> recipes;
+
+            switch (filter){
+                case "name":
+                   recipes = recipeService.findByName(arguments);
+                   break;
+                case "ingredients":
+                    recipes = recipeService.findByIngredientsContainingAll(arguments);
+                    break;
+                case "instructions":
+                    recipes = recipeService.findByInstructions(arguments);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + filter);
+            }
             return ResponseEntity.ok(recipes);
         } catch (Exception e){
             return ResponseEntity.status(500).build();

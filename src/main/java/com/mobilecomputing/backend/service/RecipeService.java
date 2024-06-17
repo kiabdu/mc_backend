@@ -90,4 +90,38 @@ public class RecipeService {
 
         return entityManager.createQuery(query).getResultList();
     }
+
+    public List<Recipe> findByName(List<String> names) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Recipe> query = cb.createQuery(Recipe.class);
+        Root<Recipe> recipe = query.from(Recipe.class);
+
+        // Erzeugen Sie eine Liste von Prädikaten für jeden Namen in der Liste
+        List<Predicate> predicates = names.stream()
+                .map(name -> cb.like(cb.lower(recipe.get("name")), "%" + name.toLowerCase() + "%"))
+                .collect(Collectors.toList());
+
+        // Fügen Sie die Prädikate zur Abfrage hinzu (als UND-Verknüpfung)
+        query.select(recipe).where(cb.and(predicates.toArray(new Predicate[0])));
+
+        // Führen Sie die Abfrage aus und geben Sie die Ergebnisliste zurück
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    public List<Recipe> findByInstructions(List<String> instructions) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Recipe> query = cb.createQuery(Recipe.class);
+        Root<Recipe> recipe = query.from(Recipe.class);
+
+        // Erzeugen Sie eine Liste von Prädikaten für jede Anweisung in der Liste
+        List<Predicate> predicates = instructions.stream()
+                .map(instruction -> cb.like(cb.lower(recipe.get("instructions")), "%" + instruction.toLowerCase() + "%"))
+                .collect(Collectors.toList());
+
+        // Fügen Sie die Prädikate zur Abfrage hinzu (als UND-Verknüpfung)
+        query.select(recipe).where(cb.and(predicates.toArray(new Predicate[0])));
+
+        // Führen Sie die Abfrage aus und geben Sie die Ergebnisliste zurück
+        return entityManager.createQuery(query).getResultList();
+    }
 }

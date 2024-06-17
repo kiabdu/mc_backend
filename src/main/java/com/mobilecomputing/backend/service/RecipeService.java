@@ -2,6 +2,12 @@ package com.mobilecomputing.backend.service;
 
 import com.mobilecomputing.backend.model.Recipe;
 import com.mobilecomputing.backend.repository.RecipeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +26,9 @@ public class RecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     // Fetch recipes by name or all recipes if no name is provided
     public List<Recipe> getAllRecipes() {
@@ -65,4 +74,20 @@ public class RecipeService {
         }
         return new ArrayList<>(randomRecipesCache); // Return a copy to prevent external modification
     }
+
+    // Fetch recipes containing all specified ingredients
+    public List<Recipe> findByIngredientsContainingAll(List<String> ingredients) {
+        /*CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Recipe> query = cb.createQuery(Recipe.class);
+        Root<Recipe> recipe = query.from(Recipe.class);
+        query.select(recipe).where(
+                cb.and(
+                        ingredients.stream()
+                                .map(ingredient -> cb.isMember(ingredient, recipe.get("ingredients")))
+                                .toArray(Predicate[]::new)
+                )
+        );
+        return entityManager.createQuery(query).getResultList();
+    */
+    return recipeRepository.findByIngredientsContainingAll(ingredients);}
 }

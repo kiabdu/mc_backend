@@ -50,4 +50,15 @@ public class RecipeController {
             return ResponseEntity.status(500).build();
         }
     }
+
+    @GetMapping("/multiple")
+    public ResponseEntity<List<Recipe>> getIngredientsContainingAll(@RequestParam List<String> ingridients){
+        try{
+            List<Recipe> recipes = recipeService.findByIngredientsContainingAll(ingridients);
+            return ResponseEntity.ok(recipes);
+        } catch (Exception e){
+            return ResponseEntity.status(500).build();
+        }
+
+    }
 }

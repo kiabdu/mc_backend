@@ -17,7 +17,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.ingredients) LIKE LOWER(CONCAT('%', :ingredients, '%'))")
     List<Recipe> findByIngredientsContainingIgnoreCase(@Param("ingredients") String ingredients);
 
-    @Query("SELECT r FROM Recipe r WHERE " + "(:ingredients) MEMBER OF r.ingredients")
-    List<Recipe> findByIngredientsContainingAll(@Param("ingredients") List<String> ingredients);
+    //@Query("SELECT r FROM Recipe r WHERE " + "(:ingredients) MEMBER OF r.ingredients")
+    //List<Recipe> findByIngredientsContainingAll(@Param("ingredients") List<String> ingredients);
 
 }

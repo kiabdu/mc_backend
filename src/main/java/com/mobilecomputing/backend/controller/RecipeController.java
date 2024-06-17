@@ -52,9 +52,9 @@ public class RecipeController {
     }
 
     @GetMapping("/multiple")
-    public ResponseEntity<List<Recipe>> getIngredientsContainingAll(@RequestParam List<String> ingridients){
+    public ResponseEntity<List<Recipe>> getIngredientsContainingAll(@RequestParam List<String> ingredient){
         try{
-            List<Recipe> recipes = recipeService.findByIngredientsContainingAll(ingridients);
+            List<Recipe> recipes = recipeService.findByIngredientsContainingAll(ingredient);
             return ResponseEntity.ok(recipes);
         } catch (Exception e){
             return ResponseEntity.status(500).build();

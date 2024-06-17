@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
@@ -77,17 +78,16 @@ public class RecipeService {
 
     // Fetch recipes containing all specified ingredients
     public List<Recipe> findByIngredientsContainingAll(List<String> ingredients) {
-        /*CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Recipe> query = cb.createQuery(Recipe.class);
         Root<Recipe> recipe = query.from(Recipe.class);
-        query.select(recipe).where(
-                cb.and(
-                        ingredients.stream()
-                                .map(ingredient -> cb.isMember(ingredient, recipe.get("ingredients")))
-                                .toArray(Predicate[]::new)
-                )
-        );
+
+        List<Predicate> predicates = ingredients.stream()
+                .map(ingredient -> cb.like(cb.lower(recipe.get("ingredients")), "%" + ingredient.toLowerCase() + "%"))
+                .collect(Collectors.toList());
+
+        query.select(recipe).where(cb.and(predicates.toArray(new Predicate[0])));
+
         return entityManager.createQuery(query).getResultList();
-    */
-    return recipeRepository.findByIngredientsContainingAll(ingredients);}
+    }
 }
